@@ -1,4 +1,4 @@
-# Finance — Sistema de Controle Financeiro Pessoal ✅
+# Finance — Sistema de Controle Financeiro
 
 [![Python](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) [![Django](https://img.shields.io/badge/django-5.2.8-green)](https://www.djangoproject.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Deploy](https://img.shields.io/badge/deploy-local-yellow)](https://img.shields.io/)
 
