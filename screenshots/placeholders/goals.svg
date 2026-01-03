@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <rect width="100%" height="100%" fill="#fffaf5"/>
+  <rect x="70" y="60" width="1060" height="480" fill="#fff" stroke="#fff0e6" rx="8"/>
+  <text x="600" y="140" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="#8a4a2b" text-anchor="middle">Metas — Placeholder</text>
+  <text x="600" y="180" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#a36b4a" text-anchor="middle">Definir meta mensal e visualizar progresso</text>
+  <rect x="240" y="240" width="720" height="32" fill="#fff4ea" stroke="#ffe1c7" rx="6"/>
+  <rect x="240" y="288" width="720" height="32" fill="#fff4ea" stroke="#ffe1c7" rx="6"/>
+  <rect x="240" y="336" width="720" height="32" fill="#fff4ea" stroke="#ffe1c7" rx="6"/>
+</svg>

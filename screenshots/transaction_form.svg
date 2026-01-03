@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <rect width="100%" height="100%" fill="#fbfbff"/>
+  <rect x="80" y="60" width="1040" height="480" fill="#fff" stroke="#ececff" rx="8"/>
+  <text x="600" y="130" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="#2b2b7a" text-anchor="middle">Formulário de Transação — Placeholder</text>
+  <text x="600" y="170" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#4b4b8d" text-anchor="middle">Campos: tipo, valor, categoria, data, descrição, recorrente</text>
+  <g fill="#f3f4ff">
+    <rect x="220" y="220" width="760" height="36" rx="6"/>
+    <rect x="220" y="266" width="760" height="36" rx="6"/>
+    <rect x="220" y="312" width="760" height="36" rx="6"/>
+    <rect x="220" y="358" width="760" height="36" rx="6"/>
+  </g>
+</svg>

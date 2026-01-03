@@ -93,6 +93,42 @@ python manage.py runserver
 
 ---
 
+## Screenshots 📸
+
+Capturas reais geradas localmente (arquivos em `screenshots/`). Se preferir, substitua por imagens próprias.
+
+- **Login**
+
+  ![Login](screenshots/real_login.png)
+
+- **Dashboard**
+
+  ![Dashboard](screenshots/real_dashboard.png)
+
+- **Lista de transações**
+
+  ![Transações](screenshots/real_transactions_list.png)
+
+- **Formulário de transação**
+
+  ![Formulário de Transação](screenshots/real_transaction_form.png)
+
+- **Categorias**
+
+  ![Categorias](screenshots/real_categories.png)
+
+- **Metas**
+
+  ![Metas](screenshots/real_goals.png)
+
+- **Perfil**
+
+  ![Perfil](screenshots/real_profile.png)
+
+> Nota: imagens geradas automaticamente com Playwright; resolução aproximada 1200×600.
+
+---
+
 ## Notas sobre o projeto
 
 - Estrutura Django com separação de models, views, forms e templates
