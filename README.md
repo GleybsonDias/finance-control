@@ -1,6 +1,6 @@
 # Finance — Sistema de Controle Financeiro Pessoal ✅
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://img.shields.io/) [![Python](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) [![Django](https://img.shields.io/badge/django-5.2.8-green)](https://www.djangoproject.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Deploy](https://img.shields.io/badge/deploy-local-yellow)](https://img.shields.io/)
+[![Python](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) [![Django](https://img.shields.io/badge/django-5.2.8-green)](https://www.djangoproject.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Deploy](https://img.shields.io/badge/deploy-local-yellow)](https://img.shields.io/)
 
 ## Descrição rápida
 
@@ -32,7 +32,7 @@ Este projeto foi desenvolvido de forma individual, ao longo do semestre, como tr
 
 ---
 
-## Como rodar localmente (Windows / PowerShell) 🔧
+## Como rodar localmente (Windows / PowerSh
 
 1. Clone o repositório
 
@@ -93,7 +93,7 @@ python manage.py runserver
 
 ---
 
-## Observações para recrutadores (o que olhar) 💡
+## Notas sobre o projeto
 
 - Estrutura Django com separação de models, views, forms e templates
 - Uso de boas práticas de segurança (hash de senha, CSRF, autorização por usuário)
@@ -127,5 +127,5 @@ Desenvolvido como projeto da disciplina **Desenvolvimento Rápido de Aplicaçõe
 
 Se quiser ver o projeto em funcionamento público, tirar dúvidas ou avaliar o código, me avise e eu envio a URL do deploy / instruções adicionais.
 
-**Obrigado!** 🙌
+**Obrigado!**
 
