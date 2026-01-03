@@ -93,9 +93,9 @@ python manage.py runserver
 
 ---
 
-## Screenshots 📸
+## Screenshots
 
-Capturas reais geradas localmente (arquivos em `screenshots/`). Se preferir, substitua por imagens próprias.
+Capturas reais geradas localmente (arquivos em `screenshots/`).
 
 - **Login**
 
