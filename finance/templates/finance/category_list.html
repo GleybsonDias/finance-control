@@ -1,0 +1,68 @@
+{% extends 'finance/base.html' %} {% block title %}
+Categorias - Finance{% endblock %} {% block content %}
+<!-- Página: Lista de Categorias -->
+<h1 class="page-title mb-4">Categorias</h1>
+
+<!-- ========== BOTÃO PARA CRIAR NOVA ========== -->
+<div class="row mb-4">
+  <div class="col-md-12">
+    <a href="{% url 'category-create' %}" class="btn btn-primary btn-lg">
+      Nova Categoria
+    </a>
+  </div>
+</div>
+
+<!-- ========== LISTA DE CATEGORIAS ========== -->
+<div class="row">
+  {% if categorias %}
+  <!-- Exibe as categorias em um grid -->
+  {% for categoria in categorias %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <!-- Nome da categoria -->
+        <h5 class="card-title">{{ categoria.name }}</h5>
+
+        <!-- Informações -->
+        <p class="text-muted mb-3">
+          {% with categoria.transactions.count as total %} 📊 {{ total }}
+          transação(ões) {% endwith %}
+        </p>
+
+        <!-- Botões de ação -->
+        <div class="d-grid gap-2">
+          <!-- Botão: Editar -->
+          <a
+            href="{% url 'category-edit' categoria.id %}"
+            class="btn btn-outline-primary"
+          >
+            ✏️ Editar
+          </a>
+
+          <!-- Botão: Deletar -->
+          <a
+            href="{% url 'category-delete' categoria.id %}"
+            class="btn btn-outline-danger"
+          >
+            🗑️ Deletar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %}
+  <!-- Mensagem quando não há categorias -->
+  <div class="col-md-12">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">📭 Nenhuma categoria encontrada</h4>
+      <p>
+        Crie sua primeira categoria para começar a organizar suas transações!
+      </p>
+      <a href="{% url 'category-create' %}" class="btn btn-primary">
+        Criar Categoria
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'finance/base.html' %} {% block title %}{{ titulo }} - Finance
+{% endblock %} {% block content %}
+<!-- Página: Formulário de Categoria -->
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <!-- Título -->
+        <h2 class="page-title mb-4">{{ titulo }}</h2>
+
+        <!-- Formulário -->
+        <form method="post">
+          <!-- Token CSRF -->
+          {% csrf_token %}
+
+          <!-- Campo: Nome -->
+          <div class="mb-4">
+            <label for="{{ form.name.id_for_label }}" class="form-label">
+              <strong>Nome da Categoria</strong>
+            </label>
+            {{ form.name }}
+            <small class="text-muted d-block mt-2">
+              Exemplos: Alimentação, Transporte, Saúde, Lazer, etc.
+            </small>
+            {% if form.name.errors %}
+            <div class="alert alert-danger mt-2">{{ form.name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- ========== BOTÕES ========== -->
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <!-- Botão: Cancelar -->
+            <a href="{% url 'category-list' %}" class="btn btn-secondary">
+              Cancelar
+            </a>
+
+            <!-- Botão: Salvar -->
+            <button type="submit" class="btn btn-primary btn-lg">
+              Salvar Categoria
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

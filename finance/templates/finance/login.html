@@ -1,0 +1,65 @@
+{% extends 'finance/base.html' %} {% block title %}Login - Finance
+{% endblock %} {% block content %}
+<!-- Página de Login -->
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5">
+    <!-- Card do formulário de login -->
+    <div class="card shadow">
+      <div class="card-body p-5">
+        <!-- Título -->
+        <h2 class="text-center mb-4">
+          <strong>Finance</strong>
+        </h2>
+        <p class="text-center text-muted mb-4">
+          Controle seus gastos com inteligência
+        </p>
+
+        <!-- Formulário de login -->
+        <form method="post">
+          <!-- Token CSRF (segurança Django) -->
+          {% csrf_token %}
+
+          <!-- Campo: Nome de usuário -->
+          <div class="mb-3">
+            <label for="id_username" class="form-label">Usuário</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id_username"
+              name="username"
+              placeholder="Seu nome de usuário"
+              required
+            />
+          </div>
+
+          <!-- Campo: Senha -->
+          <div class="mb-3">
+            <label for="id_password" class="form-label">Senha</label>
+            <input
+              type="password"
+              class="form-control"
+              id="id_password"
+              name="password"
+              placeholder="Sua senha"
+              required
+            />
+          </div>
+
+          <!-- Botão de envio -->
+          <button type="submit" class="btn btn-primary w-100 mb-3">
+            Entrar
+          </button>
+        </form>
+
+        <!-- Link para registro -->
+        <p class="text-center">
+          Não tem conta?
+          <a href="{% url 'register' %}" class="text-decoration-none">
+            <strong>Registre-se aqui</strong>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

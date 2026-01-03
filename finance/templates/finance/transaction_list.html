@@ -1,0 +1,208 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}Transações - Finance{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Cores para tipos de transação */
+    .valor-entrada {
+        color: #1cc88a;
+        font-weight: bold;
+    }
+    
+    .valor-saida {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Página: Lista de Transações -->
+<h1 class="page-title mb-4">Transações</h1>
+
+<!-- ========== BOTÃO PARA CRIAR NOVA ========== -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <a href="{% url 'transaction-create' %}" class="btn btn-primary btn-lg">
+            Nova Transação
+        </a>
+    </div>
+</div>
+
+<!-- ========== FILTROS ========== -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filtros</h5>
+                
+                <!-- Formulário de filtros -->
+                <form method="get" class="row g-3">
+                    <!-- Filtro: Tipo -->
+                    <div class="col-md-3">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <select name="tipo" id="tipo" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="entrada" {% if tipo_filtro == 'entrada' %}selected{% endif %}>Entrada</option>
+                            <option value="saida" {% if tipo_filtro == 'saida' %}selected{% endif %}>Saída</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Filtro: Categoria -->
+                    <div class="col-md-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select name="categoria" id="categoria" class="form-select">
+                            <option value="">Todas</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id }}" {% if categoria_filtro == cat.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Filtro: Data Início -->
+                    <div class="col-md-2">
+                        <label for="data_inicio" class="form-label">Data Início</label>
+                        <input 
+                            type="date" 
+                            name="data_inicio" 
+                            id="data_inicio" 
+                            class="form-control"
+                            value="{{ data_inicio }}"
+                        >
+                    </div>
+                    
+                    <!-- Filtro: Data Fim -->
+                    <div class="col-md-2">
+                        <label for="data_fim" class="form-label">Data Fim</label>
+                        <input 
+                            type="date" 
+                            name="data_fim" 
+                            id="data_fim" 
+                            class="form-control"
+                            value="{{ data_fim }}"
+                        >
+                    </div>
+                    
+                    <!-- Botão: Buscar -->
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== LISTA DE TRANSAÇÕES ========== -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if transacoes %}
+                    <h5 class="card-title mb-3">
+                        Total: {{ transacoes.count }} transação(ões)
+                    </h5>
+                    
+                    <!-- Tabela de transações -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transacao in transacoes %}
+                                <tr>
+                                    <!-- Data -->
+                                    <td>
+                                        <strong>{{ transacao.date|date:"d/m/Y" }}</strong>
+                                    </td>
+                                    
+                                    <!-- Descrição -->
+                                    <td>
+                                        {{ transacao.description|default:"Sem descrição"|truncatewords:5 }}
+                                    </td>
+                                    
+                                    <!-- Categoria -->
+                                    <td>
+                                        {% if transacao.category %}
+                                            <span class="badge bg-info">
+                                                {{ transacao.category.name }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                        
+                                        <!-- Marcador de recorrência -->
+                                        {% if transacao.recurring %}
+                                            <br>
+                                            <small class="text-success">Recorrente</small>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <!-- Tipo -->
+                                    <td>
+                                        {% if transacao.type == 'entrada' %}
+                                            <span class="badge bg-success">Entrada</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Saída</span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <!-- Valor -->
+                                    <td class="{% if transacao.type == 'entrada' %}valor-entrada{% else %}valor-saida{% endif %}">
+                                        {% if transacao.type == 'entrada' %}+{% else %}-{% endif %}
+                                        R$ {{ transacao.value|floatformat:2 }}
+                                    </td>
+                                    
+                                    <!-- Ações: Editar e Deletar -->
+                                    <td>
+                                        <!-- Botão: Editar -->
+                                        <a 
+                                            href="{% url 'transaction-edit' transacao.id %}" 
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="Editar"
+                                        >
+                                            ✏️
+                                        </a>
+                                        
+                                        <!-- Botão: Deletar -->
+                                        <a 
+                                            href="{% url 'transaction-delete' transacao.id %}" 
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Deletar"
+                                        >
+                                            🗑️
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <!-- Mensagem quando não há transações -->
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">Nenhuma transação encontrada</h4>
+                        <p>
+                            Você ainda não tem transações registradas com estes filtros.
+                            <a href="{% url 'transaction-create' %}">Clique aqui para registrar uma nova</a>.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

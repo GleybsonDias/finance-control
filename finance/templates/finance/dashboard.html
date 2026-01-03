@@ -1,0 +1,401 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}Dashboard - Finance{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Resumo financeiro */
+    .stat-card {
+        border-left: 4px solid;
+        background: white;
+    }
+    
+    .stat-card.entrada {
+        border-left-color: #1cc88a;
+    }
+    
+    .stat-card.saida {
+        border-left-color: #e74c3c;
+    }
+    
+    .stat-card.saldo {
+        border-left-color: #4e73df;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    /* Contêiner de gráficos */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Página do Dashboard -->
+<h1 class="page-title mb-4">Dashboard</h1>
+
+<!-- ========== SELETOR DE MÊS/ANO ========== -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="row g-2">
+            <!-- Seletor de mês -->
+            <div class="col-auto">
+                <select name="mes" class="form-select" onchange="this.form.submit()">
+                    {% for i in "x"|rjust:"12" %}
+                        {% if forloop.counter == mes %}
+                            <option value="{{ forloop.counter }}" selected>
+                                {% widthratio forloop.counter 1 1 %} - 
+                                {% if forloop.counter == 1 %}Janeiro
+                                {% elif forloop.counter == 2 %}Fevereiro
+                                {% elif forloop.counter == 3 %}Março
+                                {% elif forloop.counter == 4 %}Abril
+                                {% elif forloop.counter == 5 %}Maio
+                                {% elif forloop.counter == 6 %}Junho
+                                {% elif forloop.counter == 7 %}Julho
+                                {% elif forloop.counter == 8 %}Agosto
+                                {% elif forloop.counter == 9 %}Setembro
+                                {% elif forloop.counter == 10 %}Outubro
+                                {% elif forloop.counter == 11 %}Novembro
+                                {% elif forloop.counter == 12 %}Dezembro
+                                {% endif %}
+                            </option>
+                        {% else %}
+                            <option value="{{ forloop.counter }}">
+                                {% widthratio forloop.counter 1 1 %} - 
+                                {% if forloop.counter == 1 %}Janeiro
+                                {% elif forloop.counter == 2 %}Fevereiro
+                                {% elif forloop.counter == 3 %}Março
+                                {% elif forloop.counter == 4 %}Abril
+                                {% elif forloop.counter == 5 %}Maio
+                                {% elif forloop.counter == 6 %}Junho
+                                {% elif forloop.counter == 7 %}Julho
+                                {% elif forloop.counter == 8 %}Agosto
+                                {% elif forloop.counter == 9 %}Setembro
+                                {% elif forloop.counter == 10 %}Outubro
+                                {% elif forloop.counter == 11 %}Novembro
+                                {% elif forloop.counter == 12 %}Dezembro
+                                {% endif %}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Seletor de ano -->
+            <div class="col-auto">
+                <select name="ano" class="form-select" onchange="this.form.submit()">
+                    <option value="2024" {% if ano == 2024 %}selected{% endif %}>2024</option>
+                    <option value="2025" {% if ano == 2025 %}selected{% endif %}>2025</option>
+                    <option value="2026" {% if ano == 2026 %}selected{% endif %}>2026</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== RESUMO FINANCEIRO (CARDS) ========== -->
+<div class="row mb-4">
+    <!-- Card: Entradas -->
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card entrada">
+            <div class="card-body">
+                <p class="text-muted mb-2">Entradas</p>
+                <div class="stat-value">R$ {{ entradas|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Card: Saídas -->
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card saida">
+            <div class="card-body">
+                <p class="text-muted mb-2">Saídas</p>
+                <div class="stat-value">R$ {{ saidas|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Card: Saldo -->
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card saldo">
+            <div class="card-body">
+                <p class="text-muted mb-2">Saldo</p>
+                <div class="stat-value" style="color: {% if saldo >= 0 %}#1cc88a{% else %}#e74c3c{% endif %}">
+                    R$ {{ saldo|floatformat:2 }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Card: Meta -->
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <p class="text-muted mb-2">Meta Mês</p>
+                <div class="stat-value">
+                    {% if meta %}
+                        R$ {{ meta.total_goal|floatformat:2 }}
+                    {% else %}
+                        Sem meta
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== PROGRESSO DA META ========== -->
+{% if meta %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Progresso da Meta</h5>
+                <p class="text-muted">Você gastou R$ {{ saidas|floatformat:2 }} de R$ {{ meta.total_goal|floatformat:2 }}</p>
+                
+                <!-- Barra de progresso -->
+                <div class="progress" style="height: 25px;">
+                    <div 
+                        class="progress-bar {% if percentual_gasto > 100 %}bg-danger{% elif percentual_gasto > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                        role="progressbar" 
+                        style="width: {{ percentual_gasto|floatformat:0 }}%; min-width: 0;"
+                        aria-valuenow="{{ percentual_gasto|floatformat:0 }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100"
+                    >
+                        {{ percentual_gasto|floatformat:0 }}%
+                    </div>
+                </div>
+                
+                <!-- Status -->
+                <p class="mt-3 mb-0">
+                    {% if percentual_gasto <= 80 %}
+                        <span class="badge bg-success">✓ Dentro do orçamento</span>
+                    {% elif percentual_gasto <= 100 %}
+                        <span class="badge bg-warning">⚠ Atentado ao limite</span>
+                    {% else %}
+                        <span class="badge bg-danger">✗ Acima da meta!</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Link para criar meta -->
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h5>Quer ajustar a meta?</h5>
+                <a href="{% url 'goal-edit' meta.id %}" class="btn btn-primary">
+                    Editar Meta
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Defina uma meta para este mês</h5>
+                <p>Metas ajudam a controlar seus gastos! Defina quanto você quer gastar neste mês.</p>
+                <a href="{% url 'goal-create' %}" class="btn btn-light">Criar Meta</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- ========== GRÁFICOS ========== -->
+<div class="row">
+    <!-- Gráfico: Gastos por Categoria -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Gastos por Categoria</h5>
+                {% if gastos_por_categoria %}
+                    <div class="chart-container">
+                        <canvas id="chartCategoria"></canvas>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhuma transação neste mês</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gráfico: Entradas vs Saídas -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Entradas vs Saídas</h5>
+                <div class="chart-container">
+                    <canvas id="chartComparacao"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== ÚLTIMAS TRANSAÇÕES ========== -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Últimas Transações</h5>
+                {% if ultimas_transacoes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transacao in ultimas_transacoes %}
+                                <tr>
+                                    <td>{{ transacao.date|date:"d/m/Y" }}</td>
+                                    <td>{{ transacao.description|default:"Sem descrição" }}</td>
+                                    <td>
+                                        {% if transacao.category %}
+                                            <span class="badge bg-secondary">
+                                                {{ transacao.category.name }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if transacao.type == 'entrada' %}
+                                            <span class="badge bg-success">Entrada</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Saída</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="color: {% if transacao.type == 'entrada' %}#1cc88a{% else %}#e74c3c{% endif %}">
+                                        {{ transacao.type|upper }}: R$ {{ transacao.value|floatformat:2 }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Link para ver todas -->
+                    <a href="{% url 'transaction-list' %}" class="btn btn-outline-primary">
+                        Ver Todas as Transações
+                    </a>
+                {% else %}
+                    <p class="text-muted">Nenhuma transação registrada ainda.</p>
+                    <a href="{% url 'transaction-create' %}" class="btn btn-primary">
+                        Registrar Primeira Transação
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ========== GRÁFICO: GASTOS POR CATEGORIA ==========
+    // Só desenha o gráfico se houver dados
+    {% if gastos_por_categoria %}
+        const ctxCategoria = document.getElementById('chartCategoria').getContext('2d');
+        
+        // Dados do gráfico
+        const categoriasNomes = [
+            {% for categoria, valor in gastos_por_categoria.items %}
+                '{{ categoria }}',
+            {% endfor %}
+        ];
+        
+        const categoriasValores = [
+            {% for categoria, valor in gastos_por_categoria.items %}
+                {{ valor }},
+            {% endfor %}
+        ];
+        
+        // Cores diferentes para cada fatia do gráfico
+        const cores = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f39c12', '#e74c3c',
+            '#9b59b6', '#3498db', '#2ecc71', '#f1c40f', '#e67e22'
+        ];
+        
+        // Criar gráfico de pizza
+        const chartCategoria = new Chart(ctxCategoria, {
+            type: 'doughnut',
+            data: {
+                labels: categoriasNomes,
+                datasets: [{
+                    data: categoriasValores,
+                    backgroundColor: cores.slice(0, categoriasNomes.length),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    {% endif %}
+    
+    // ========== GRÁFICO: ENTRADAS VS SAÍDAS ==========
+    const ctxComparacao = document.getElementById('chartComparacao').getContext('2d');
+    
+    const chartComparacao = new Chart(ctxComparacao, {
+        type: 'bar',
+        data: {
+            labels: ['Entradas', 'Saídas'],
+            datasets: [{
+                label: 'Valor (R$)',
+                data: [
+                    {{ entradas }},
+                    {{ saidas }}
+                ],
+                backgroundColor: [
+                    '#1cc88a',  // Verde para entradas
+                    '#e74c3c'   // Vermelho para saídas
+                ],
+                borderColor: ['#1cc88a', '#e74c3c'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',  // Gráfico horizontal
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'finance/base.html' %} {% block title %}Registrar -
+Finance{%endblock %} {% block content %}
+<!-- Página de Registro -->
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5">
+    <!-- Card do formulário de registro -->
+    <div class="card shadow">
+      <div class="card-body p-5">
+        <!-- Título -->
+        <h2 class="text-center mb-4">Criar Conta</h2>
+        <p class="text-center text-muted mb-4">
+          Comece a controlar suas finanças agora!
+        </p>
+
+        <!-- Formulário de registro -->
+        <form method="post">
+          <!-- Token CSRF -->
+          {% csrf_token %}
+
+          <!-- Campo: Nome de usuário -->
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">
+              <strong>Usuário</strong>
+            </label>
+            {{ form.username }}
+            <!-- Mostra erros se houver -->
+            {% if form.username.errors %}
+            <div
+              class="alert alert-danger alert-dismissible fade show mt-2 mb-0"
+              role="alert"
+            >
+              <small>
+                <strong>⚠️ Erro:</strong>
+                {% for error in form.username.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Email -->
+          <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">
+              <strong>Email</strong>
+            </label>
+            {{ form.email }} {% if form.email.errors %}
+            <div
+              class="alert alert-danger alert-dismissible fade show mt-2 mb-0"
+              role="alert"
+            >
+              <small>
+                <strong>⚠️ Erro:</strong>
+                {% for error in form.email.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Senha -->
+          <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label">
+              <strong>Senha</strong>
+            </label>
+            {{ form.password1 }}
+            <!-- Requisitos de senha -->
+            <small class="text-muted d-block mt-2">
+              ✓ Mínimo 8 caracteres<br />
+              ✓ Não pode ser números apenas<br />
+              ✓ Não pode ser sua senha comum
+            </small>
+            {% if form.password1.errors %}
+            <div
+              class="alert alert-danger alert-dismissible fade show mt-2 mb-0"
+              role="alert"
+            >
+              <small>
+                <strong>⚠️ Erro:</strong>
+                {% for error in form.password1.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Confirmar Senha -->
+          <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}" class="form-label">
+              <strong>Confirmar Senha</strong>
+            </label>
+            {{ form.password2 }} {% if form.password2.errors %}
+            <div
+              class="alert alert-danger alert-dismissible fade show mt-2 mb-0"
+              role="alert"
+            >
+              <small>
+                <strong>⚠️ Erro:</strong>
+                {% for error in form.password2.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Botão de envio -->
+          <button type="submit" class="btn btn-primary w-100 mb-3">
+            Registrar
+          </button>
+        </form>
+
+        <!-- Link para login -->
+        <p class="text-center">
+          Já tem conta?
+          <a href="{% url 'login' %}" class="text-decoration-none">
+            <strong>Faça login</strong>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'finance/base.html' %} {% block title %}Confirmar Deleção -
+Finance{% endblock %} {% block content %}
+<!-- Página: Confirmação de Deleção de Transação -->
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card border-danger shadow">
+      <div class="card-body">
+        <!-- Aviso -->
+        <div class="alert alert-danger" role="alert">
+          <h4 class="alert-heading">⚠️ Atenção!</h4>
+          <p>Você está prestes a deletar a seguinte transação:</p>
+        </div>
+
+        <!-- Informações da transação -->
+        <div class="card mb-4 bg-light">
+          <div class="card-body">
+            <p><strong>Data:</strong> {{ transacao.date|date:"d/m/Y" }}</p>
+            <p>
+              <strong>Tipo:</strong>
+              {% if transacao.type == 'entrada' %}
+              <span class="badge bg-success">Entrada</span>
+              {% else %}
+              <span class="badge bg-danger">Saída</span>
+              {% endif %}
+            </p>
+            <p>
+              <strong>Valor:</strong> R$ {{ transacao.value|floatformat:2 }}
+            </p>
+            <p>
+              <strong>Categoria:</strong>
+              {% if transacao.category %} {{ transacao.category.name }} {% else
+              %} N/A {% endif %}
+            </p>
+            <p>
+              <strong>Descrição:</strong> {{ transacao.description|default:"Sem
+              descrição" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Aviso em vermelho -->
+        <p class="text-danger mb-4">
+          <strong>⚠️ Esta ação não pode ser desfeita!</strong>
+        </p>
+
+        <!-- Formulário de confirmação -->
+        <form
+          method="post"
+          class="d-grid gap-2 d-md-flex justify-content-md-end"
+        >
+          {% csrf_token %}
+
+          <!-- Botão: Cancelar -->
+          <a href="{% url 'transaction-list' %}" class="btn btn-secondary">
+            ❌ Não, Cancelar
+          </a>
+
+          <!-- Botão: Confirmar Deleção -->
+          <button type="submit" class="btn btn-danger">
+            🗑️ Sim, Deletar Transação
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

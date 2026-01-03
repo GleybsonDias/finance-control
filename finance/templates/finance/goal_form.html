@@ -1,0 +1,70 @@
+{% extends 'finance/base.html' %} {% block title %}{{ titulo }} - Finance
+{% endblock %} {% block content %}
+<!-- Página: Formulário de Meta -->
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <!-- Título -->
+        <h2 class="page-title mb-4">{{ titulo }}</h2>
+
+        <!-- Formulário -->
+        <form method="post">
+          <!-- Token CSRF -->
+          {% csrf_token %}
+
+          <!-- Campo: Mês -->
+          <div class="mb-3">
+            <label for="{{ form.month.id_for_label }}" class="form-label">
+              <strong>Mês</strong>
+            </label>
+            {{ form.month }} {% if form.month.errors %}
+            <div class="alert alert-danger mt-2">{{ form.month.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Ano -->
+          <div class="mb-3">
+            <label for="{{ form.year.id_for_label }}" class="form-label">
+              <strong>Ano</strong>
+            </label>
+            {{ form.year }} {% if form.year.errors %}
+            <div class="alert alert-danger mt-2">{{ form.year.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Campo: Meta de Gastos -->
+          <div class="mb-4">
+            <label for="{{ form.total_goal.id_for_label }}" class="form-label">
+              <strong>Meta de Gastos (R$)</strong>
+            </label>
+            {{ form.total_goal }}
+            <small class="text-muted d-block mt-2">
+              Quanto você quer gastar no máximo neste mês?<br />
+              Exemplo: 2500.00
+            </small>
+            {% if form.total_goal.errors %}
+            <div class="alert alert-danger mt-2">
+              {{ form.total_goal.errors }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- ========== BOTÕES ========== -->
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <!-- Botão: Cancelar -->
+            <a href="{% url 'goal-list' %}" class="btn btn-secondary">
+              ❌ Cancelar
+            </a>
+
+            <!-- Botão: Salvar -->
+            <button type="submit" class="btn btn-primary btn-lg">
+              💾 Salvar Meta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
